@@ -7,10 +7,16 @@
                 @csrf
                 <div class="form-group mt-30">
                     <div class="col-autos">
-                        <input type="text" name="email" class="form-control" placeholder="Enter email" value="{{ old('email') }}"
-                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email'">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                            @endsession
+                            <input type="text" name="email" class="form-control" placeholder="Enter email"
+                                value="{{ old('email') }}" onfocus="this.placeholder = ''"
+                                onblur="this.placeholder = 'Enter email'">
                             @error('email')
-                              <span class="text-danger" >{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                     </div>
                 </div>
