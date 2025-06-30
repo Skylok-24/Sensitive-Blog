@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubsecriberController;
 use App\Http\Controllers\ThemeController;
@@ -32,3 +33,4 @@ Route::controller(ThemeController::class)->name('theme.')->group(function(){
 });
 
 Route::post('/subscribe',[SubsecriberController::class,'store'])->name('subscribe');
+Route::post('/contact',[ContactController::class,'store'])->name('contact');
