@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubsecriberController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,5 @@ Route::controller(ThemeController::class)->name('theme.')->group(function(){
     Route::get('blog-detail', 'singleBlog')
         ->name('singleBlog');
 });
+
+Route::post('/subscribe',[SubsecriberController::class,'store'])->name('subscribe');
