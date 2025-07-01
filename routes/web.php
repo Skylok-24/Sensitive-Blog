@@ -36,3 +36,4 @@ Route::controller(ThemeController::class)->name('theme.')->group(function(){
 Route::post('/subscribe',[SubsecriberController::class,'store'])->name('subscribe');
 Route::post('/contact',[ContactController::class,'store'])->name('contact');
 Route::resource('blogs', BlogController::class);
+Route::get('/myBlogs',[BlogController::class,'myBlogs'])->name('myBlogs');

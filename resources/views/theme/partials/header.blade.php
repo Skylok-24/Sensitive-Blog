@@ -54,12 +54,12 @@
                                     role="button" aria-haspopup="true" aria-expanded="false">Welcome
                                     {{ Auth::user()->name }}</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="{{ route('theme.singleBlog') }}">My
+                                    <li class="nav-item"><a class="nav-link" href="{{ route('myBlogs') }}">My
                                             Blogs</a></li>
                                     <li class="nav-item">
-                                        <form action="{{ route('logout') }}" method="post">
+                                        <form action="{{ route('logout') }}" method="post" id="logout_form">
                                             @csrf
-                                            <a class="nav-link" href="javascript:$('form').submit()">Logout</a>
+                                            <a class="nav-link" href="javascript:$('form#logout_form').submit()">Logout</a>
                                         </form>
                                     </li>
                                 </ul>

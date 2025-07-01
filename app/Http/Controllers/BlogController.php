@@ -70,7 +70,8 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        
+       $categories = Category::get();
+        return view('theme.blogs.edit',compact('categories','blog')); 
     }
 
     /**
@@ -87,5 +88,17 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         //
+    }
+
+    // display user blogs
+    public function myBlogs()
+    {
+        if(Auth::check()) 
+        {
+
+        $blogs = Blog::where('user_id',Auth::user()->id)->paginate(10);
+        return view('theme.blogs.myBlogs',compact('blogs'));
+        }
+        abort(403);
     }
 }
