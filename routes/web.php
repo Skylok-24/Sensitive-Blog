@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubsecriberController;
@@ -20,7 +21,7 @@ require __DIR__.'/auth.php';
 
 Route::controller(ThemeController::class)->name('theme.')->group(function(){
     Route::get('/','index')->name('index');
-    Route::get('/category','category')->name('category');
+    Route::get('/category/{id}','category')->name('category');
     Route::get('/contact','contact')->name('contact');
     Route::get('login','login')
         ->middleware('guest')
@@ -34,3 +35,4 @@ Route::controller(ThemeController::class)->name('theme.')->group(function(){
 
 Route::post('/subscribe',[SubsecriberController::class,'store'])->name('subscribe');
 Route::post('/contact',[ContactController::class,'store'])->name('contact');
+Route::resource('blogs', BlogController::class);
