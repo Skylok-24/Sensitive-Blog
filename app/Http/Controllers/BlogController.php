@@ -7,6 +7,9 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBlogForm;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateBlogForm;
+use Illuminate\Support\Facades\Storage;
+
 
 class BlogController extends Controller
 {
@@ -32,7 +35,7 @@ class BlogController extends Controller
     public function create()
     {
         $categories = Category::get();
-        return view('theme.blogs.create',compact('categories'));
+        return view('theme.blogs.create', compact('categories'));
     }
 
     /**
@@ -47,14 +50,13 @@ class BlogController extends Controller
         // 2 - change it's current name
         $newImageName = time() . '-' . $image->getClientOriginalName();
         // 3 - move image to my project
-        $image->storeAs('blogs',$newImageName,'public');
+        $image->storeAs('blogs', $newImageName, 'public');
         // 4 - save new name to database record
         $data['image'] = $newImageName;
         $data['user_id'] = Auth::user()->id;
         Blog::create($data);
 
-        return back()->with('blogStatus','Your Blog Created Successfully');
-
+        return back()->with('blogStatus', 'Your Blog Created Successfully');
     }
 
     /**
@@ -62,7 +64,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        return view('theme.blog-detail',compact('blog'));
+        return view('theme.blog-detail', compact('blog'));
     }
 
     /**
@@ -70,16 +72,40 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-       $categories = Category::get();
-        return view('theme.blogs.edit',compact('categories','blog')); 
+        if ($blog->user_id == Auth::user()->id) {
+            $categories = Category::get();
+            return view('theme.blogs.edit', compact('categories', 'blog'));
+        }
+        abort(403);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Blog $blog)
+    public function update(UpdateBlogForm $request, Blog $blog)
     {
-        //
+        if ($blog->user_id == Auth::user()->id) {
+
+            $data = $request->validated();
+            // uploading Image
+            if ($request->hasFile('image')) {
+                // delete old image
+                Storage::disk('public')->delete("blogs/$blog->image");
+                // 1 - get image
+                $image = $request->image;
+                // 2 - change it's current name
+                $newImageName = time() . '-' . $image->getClientOriginalName();
+                // 3 - move image to my project
+                $image->storeAs('blogs', $newImageName, 'public');
+                // 4 - save new name to database record
+                $data['image'] = $newImageName;
+            }
+
+            $blog->update($data);
+
+            return back()->with('blogUpdateStatus', 'Your Blog Updated Successfully');
+        }
+        abort(403);
     }
 
     /**
@@ -87,17 +113,21 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        //
+        if ($blog->user_id == Auth::user()->id) {
+            Storage::disk('public')->delete("blogs/$blog->image");
+            $blog->delete();
+            return back()->with('blogDeleteStatus', 'Your Blog Deleted Successfully');
+        }
+        abort(403);
     }
 
     // display user blogs
     public function myBlogs()
     {
-        if(Auth::check()) 
-        {
+        if (Auth::check()) {
 
-        $blogs = Blog::where('user_id',Auth::user()->id)->paginate(10);
-        return view('theme.blogs.myBlogs',compact('blogs'));
+            $blogs = Blog::where('user_id', Auth::user()->id)->paginate(10);
+            return view('theme.blogs.myBlogs', compact('blogs'));
         }
         abort(403);
     }
