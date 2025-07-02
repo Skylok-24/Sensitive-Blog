@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubsecriberController;
@@ -37,3 +38,4 @@ Route::post('/subscribe',[SubsecriberController::class,'store'])->name('subscrib
 Route::post('/contact',[ContactController::class,'store'])->name('contact');
 Route::resource('blogs', BlogController::class);
 Route::get('/myBlogs',[BlogController::class,'myBlogs'])->name('myBlogs');
+Route::post('/comment/store',[CommentController::class,'store'])->middleware('auth')->name('comment.create');
