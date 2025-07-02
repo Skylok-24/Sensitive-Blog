@@ -9,8 +9,9 @@ class ThemeController extends Controller
 {
     public function index() 
     {
+        $sliderBlogs = Blog::latest()->take(3)->get();
         $blogs = Blog::paginate(4);
-        return view('theme.index',compact('blogs'));
+        return view('theme.index',compact('blogs','sliderBlogs'));
     }
 
     public function category($id) 
